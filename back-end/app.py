@@ -6,14 +6,43 @@ from flask import Flask, jsonify, request
 from flask_cors import CORS
 import sqlite3
 import time
+import collections
 
 app = Flask(__name__)
 CORS(app)
 
 DB_FILE = "database.db"
 MAX_PRICE = 10000
+
 # Dictionnaire pour gérer les calculs ultra-rapides en RAM
 active_sessions = {}
+
+event_log = collections.deque(maxlen=100)
+API_TOKEN = "caca123"
+
+def check_token():
+    """Vérifie Bearer ou X-API-Key"""
+    auth = request.headers.get("Authorization", "")
+    if auth.startswith("Bearer ") and auth[7:] == API_TOKEN:
+        return True
+    if request.headers.get("X-API-Key", "") == API_TOKEN:
+        return True
+    return False
+
+@app.route("/api/event", methods=["POST"])
+def receive_event():
+    if API_TOKEN and not check_token():
+        return jsonify({"error": "Unauthorized"}), 403
+
+    data = request.get_json(silent=True) or {}
+    data["received_at"] = time.time()
+    event_log.append(data)
+    print(f"[EVENT] {data.get('type')} | {data.get('payload')}")
+    return jsonify({"status": "ok"}), 200
+
+@app.route("/api/events", methods=["GET"])
+def list_events():
+    return jsonify(list(event_log))
 
 def init_db():
     with sqlite3.connect(DB_FILE) as conn:
