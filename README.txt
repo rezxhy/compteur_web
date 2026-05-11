@@ -1,10 +1,8 @@
 ================================================================================
-  COMPTEUR WEB - APPLICATION DE PRESSION TEMPORELLE
-  Auteur  : Victor CHENG
-  Date    : 10 Mai 2026
-  Stack   : Python (Flask) + React (JSX) + SQLite
+COMPTEUR WEB
+Date    : 10 Mai 2026
+Stack   : Python (Flask) + React (JSX) + SQLite
 ================================================================================
-
 DESCRIPTION
 -----------
 Application web interactive dont le prix augmente avec le temps.
@@ -16,13 +14,11 @@ via Coinbase Commerce.
 Chaque utilisateur dispose d'une session indépendante identifiée par un ID
 client unique généré côté navigateur et persisté en localStorage.
 
-
 ARCHITECTURE
 ------------
 Backend  : Flask (Python) — app.py
 Frontend : React (JSX)   — App.jsx
 Base de données : SQLite  — database.db (créée automatiquement)
-
 
 FONCTIONNEMENT
 --------------
@@ -42,7 +38,6 @@ Persistance hybride (RAM + SQLite) :
 - En cas de redémarrage du serveur, le temps écoulé est recalculé
   automatiquement depuis la dernière sauvegarde.
 
-
 ENDPOINTS API
 -------------
 GET  /api/state      Récupère l'état courant de la session
@@ -52,14 +47,12 @@ POST /api/checkout   Génère l'URL de paiement Coinbase Commerce
 POST /api/event      Enregistre un événement (protégé par token)
 GET  /api/events     Liste les 100 derniers événements
 
-
 SÉCURITÉ
 --------
 - Authentification par Bearer Token ou header X-API-Key (endpoint /api/event)
 - Throttling côté backend : les ticks arrivant en moins de 0.8s sont ignorés
 - Sessions isolées par X-Client-ID (un état par navigateur)
 - CORS activé via flask-cors
-
 
 INSTALLATION & LANCEMENT
 -------------------------
@@ -75,21 +68,17 @@ Prérequis : Python 3.8+, Node.js 18+
   npm run dev
   → Interface disponible sur http://localhost:5173 (ou port Vite par défaut)
 
-
 VARIABLES DE CONFIGURATION (app.py)
 ------------------------------------
   MAX_PRICE  = 10000   Prix maximum en euros
   API_TOKEN  = "..."   Token d'authentification pour /api/event
   DB_FILE    = "database.db"   Chemin de la base SQLite
 
-
 STRUCTURE DU PROJET
 -------------------
   app.py          Backend Flask (API REST + logique métier)
   App.jsx         Frontend React (UI + timer + paiement)
   database.db     Base SQLite (générée automatiquement au premier lancement)
-  README.txt      Ce fichier
-
 
 TECHNOLOGIES UTILISÉES
 -----------------------
